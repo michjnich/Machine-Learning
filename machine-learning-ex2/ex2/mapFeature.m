@@ -10,6 +10,8 @@ function out = mapFeature(X1, X2)
 %   Inputs X1, X2 must be the same size
 %
 
+% end+1 is a shortcut to append a new row or column
+
 degree = 6;
 out = ones(size(X1(:,1)));
 for i = 1:degree
