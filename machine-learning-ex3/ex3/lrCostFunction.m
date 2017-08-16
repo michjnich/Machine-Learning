@@ -36,7 +36,7 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
-predictions = sigmoid(X * theta)
+predictions = sigmoid(X * theta);
 
 thetaTemp = theta(2:length(theta));
 thetaTemp = [0; thetaTemp];
