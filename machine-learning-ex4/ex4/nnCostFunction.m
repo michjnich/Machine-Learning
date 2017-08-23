@@ -38,6 +38,32 @@ Theta2_grad = zeros(size(Theta2));
 %         variable J. After implementing Part 1, you can verify that your
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
+
+
+% num_labels is equivalent to the number of classes
+y_matrix = eye(num_labels)(y,:);
+
+a1 = [ones(m,1), X];
+
+z2 = a1 * Theta1';
+a2 = sigmoid(z2);
+a2 = [ones(size(a2,1),1), a2];
+
+z3 = a2 * Theta2'; 
+a3 = sigmoid(z3);
+
+nonreg = sum(sum((-y_matrix .* log(a3)) - ((1 - y_matrix) .* log(1 - a3)))) / m;
+
+% Remove the bias units for the regularisation calculation
+
+Theta1_excl_bias_units = Theta1(:, 2:end);
+Theta2_excl_bias_units = Theta2(:, 2:end);
+
+reg = (lambda / (2 * m)) * (sum(sum(Theta1_excl_bias_units .^ 2)) + sum(sum(Theta2_excl_bias_units .^ 2)));
+
+J = nonreg + reg; 
+
+
 %
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
@@ -62,28 +88,21 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-% num_labels is equivalent to the number of classes
-y_matrix = eye(num_labels)(y,:);
+d3 = a3 - y_matrix;
 
-a1 = [ones(m,1), X];
+d2 = (Theta2' * d3) .* sigmoidGradient(z3);
+d2_excl_bias_units = d2(2:end);
 
-z2 = a1 * Theta1';
-a2 = sigmoid(z2);
-a2 = [ones(size(a2,1),1), a2];
 
-z3 = a2 * Theta2'; 
-a3 = sigmoid(z3);
+Theta1_grad = (1 / m) * Delta1;
+Theta2_grad = (1 / m) * Delta2;
 
-nonreg = sum(sum((-y_matrix .* log(a3)) - ((1 - y_matrix) .* log(1 - a3)))) / m;
 
-% Remove the bias units for the regularisation calculation
 
-Theta1_temp = Theta1(:, 2:end);
-Theta2_temp = Theta2(:, 2:end);
 
-reg = (lambda / (2 * m)) * (sum(sum(Theta1_temp .^ 2)) + sum(sum(Theta2_temp .^ 2)));
 
-J = nonreg + reg; 
+
+
 
 
 
