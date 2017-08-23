@@ -88,37 +88,40 @@ J = nonreg + reg;
 %               and Theta2_grad from Part 2.
 %
 
-d3 = a3 - y_matrix;
+D1 = 0;
+D2 = 0;
 
-d2 = (Theta2' * d3) .* sigmoidGradient(z3);
-d2_excl_bias_units = d2(2:end);
+% For each example, compute the a and z values, then BP the delta vals and add to the Delta sum
 
+for i = 1:m
 
-Theta1_grad = (1 / m) * Delta1;
-Theta2_grad = (1 / m) * Delta2;
+	%Include the bias unit for a1
+	a1 = [ 1; X(i,:)' ]; 	% 401 x 1
+		
+	z2 = Theta1 * a1;
+	a2 = sigmoid(z2);
+	a2 = [ 1; a2 ]; 		% 26 x 1
+	
+	z3 = Theta2 * a2; 
+	a3 = sigmoid(z3); 		% 10 x 1
+		
+	d3 = a3 - y_matrix(i,:)'; 	% 10 x 1 - 10 x 1  => 10 x 1
+		
+	d2 = (Theta2_excl_bias_units' * d3) .* sigmoidGradient(z2);
+	
+	D2 += (d3 * a2');
+	D1 += (d2 * a1');
+endfor
 
+% Gradient without regularisation
 
+Theta1_grad = (1 / m) * D1;
+Theta2_grad = (1 / m) * D2;
 
+% Gradient with regularisation (don't regularise bias units (j=0), i.e. remove the first column)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Theta1_grad(:, 2:end) += ((lambda / m) * Theta1_excl_bias_units);
+Theta2_grad(:, 2:end) += ((lambda / m)* Theta2_excl_bias_units);
 
 
 % -------------------------------------------------------------
