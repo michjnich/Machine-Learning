@@ -62,6 +62,28 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% num_labels is equivalent to the number of classes
+y_matrix = eye(num_labels)(y,:);
+
+a1 = [ones(m,1), X];
+
+z2 = a1 * Theta1';
+a2 = sigmoid(z2);
+a2 = [ones(size(a2,1),1), a2];
+
+z3 = a2 * Theta2'; 
+a3 = sigmoid(z3);
+
+nonreg = sum(sum((-y_matrix .* log(a3)) - ((1 - y_matrix) .* log(1 - a3)))) / m;
+
+% Remove the bias units for the regularisation calculation
+
+Theta1_temp = Theta1(:, 2:end);
+Theta2_temp = Theta2(:, 2:end);
+
+reg = (lambda / (2 * m)) * (sum(sum(Theta1_temp .^ 2)) + sum(sum(Theta2_temp .^ 2)));
+
+J = nonreg + reg; 
 
 
 
