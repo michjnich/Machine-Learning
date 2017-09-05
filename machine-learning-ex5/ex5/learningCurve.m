@@ -55,7 +55,6 @@ for i = 1:m
    x_train = X(1:i,:);
    y_train = y(1:i);
 
-
    theta = trainLinearReg(x_train, y_train, lambda);
 
    train_lambda = 0;

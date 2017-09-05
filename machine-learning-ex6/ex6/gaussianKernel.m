@@ -16,11 +16,12 @@ sim = 0;
 %
 %
 
+% Note: norm computes the length of a vector. length returns the size of the vector matrix.
+% In the example they are both the same, so length looks like it works but won't passes
+% the submission
 
-
-
-
+sim = exp(-norm(x1 - x2)^2 / (2 * (sigma^2)));
 
 % =============================================================
-    
+
 end
